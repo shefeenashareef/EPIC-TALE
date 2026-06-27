@@ -3,7 +3,7 @@
 
 Epic Tale Studio is an immersive, interactive narrative engine that instantly weaves rich, imagery-packed prose across 15 literary genres. Built with a modern glassmorphic interface, it combines creative AI storytelling with powerful, real-time literacy tools—featuring automated text-to-speech tracking and a native click-to-define vocabulary panel.
 
-![Epic Tale Studio Dashboard](SS-EPIC.PNG)
+![Epic Tale Studio Dashboard](SS-EPIC-1.PNG)
 
 ## ✨ Features
 
