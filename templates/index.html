@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Epic Tale Studio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        /* Smooth, abstract colorful gradient mesh animation */
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            background-image: radial-gradient(at 0% 0%, #ff9a9e 0px, transparent 50%),
+                              radial-gradient(at 50% 0%, #a1c4fd 0px, transparent 50%),
+                              radial-gradient(at 100% 0%, #cfd9df 0px, transparent 50%),
+                              radial-gradient(at 50% 100%, #eee1f7 0px, transparent 50%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Glassmorphism card effects */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.06);
+        }
+
+        /* Dynamic floating thematic doodle designs */
+        .doodle {
+            position: absolute;
+            opacity: 0.15;
+            pointer-events: none;
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: float 6s ease-in-out infinite alternate;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            100% { transform: translateY(-20px) rotate(10deg); }
+        }
+
+        /* Dynamic story title configuration - Centered & Colorful */
+        #storyContent h1 {
+            text-align: center !important;
+            font-size: 2.5rem !important;
+            font-weight: 800 !important;
+            line-height: 1.3 !important;
+            background: linear-gradient(to right, #6b21a8, #1e40af);
+            -webkit-background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
+            margin-bottom: 2rem !important;
+            letter-spacing: -0.025em !important;
+            display: block !important;
+            width: 100% !important;
+        }
+
+        /* Word highlighting styles */
+        .story-word {
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.1s ease;
+            padding: 0 2px;
+        }
+        .story-word:hover {
+            background-color: rgba(167, 139, 250, 0.3);
+        }
+        .word-highlight {
+            background-color: #fef08a !important; /* Vivid Yellow */
+            color: #000000 !important;
+        }
+    </style>
+</head>
+<body class="p-6 md:p-12 relative">
+
+    <div id="leftDoodleZone" class="hidden lg:block fixed left-10 top-1/4 w-32 h-96 pointer-events-none"></div>
+    <div id="rightDoodleZone" class="hidden lg:block fixed right-10 top-1/3 w-32 h-96 pointer-events-none"></div>
+
+    <main class="max-w-4xl mx-auto relative z-10">
+        <header class="text-center mb-10">
+            <h1 class="text-4xl font-extrabold text-slate-800 tracking-tight drop-shadow-sm mb-2">
+                🔮 Epic Tale Studio 🔮
+            </h1>
+            <p class="text-slate-600 font-medium">Generate rich, imagery-packed narrative prose instantly.</p>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <section class="glass-panel p-6 rounded-2xl h-fit">
+                <h2 class="text-lg font-bold text-slate-700 mb-4 border-b pb-2">Story Configurations</h2>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Genre</label>
+                        <select id="genreInput" class="w-full bg-white/70 border border-slate-200 rounded-xl px-3 py-2 text-slate-700 focus:outline-none focus:ring-2 focus:ring-purple-400">
+                            <option value="Sci-Fi">Sci-Fi / Space Opera</option>
+                            <option value="Fantasy">High Fantasy / Magic</option>
+                            <option value="Mystery">Noir Mystery / Detective</option>
+                            <option value="Horror">Gothic Horror</option>
+                            <option value="Cyberpunk">Cyberpunk / Neon Dystopia</option>
+                            <option value="Steampunk">Steampunk / Retro-Tech</option>
+                            <option value="Historical Fiction">Historical Fiction</option>
+                            <option value="Romance">Contemporary Romance</option>
+                            <option value="Thriller">Psychological Thriller</option>
+                            <option value="Adventure">Epic Adventure / Quest</option>
+                            <option value="Mythology">Mythology / Legendary</option>
+                            <option value="Dystopian">Post-Apocalyptic / Dystopian</option>
+                            <option value="Comedy">Satire / Dark Comedy</option>
+                            <option value="Western">Classic Western</option>
+                            <option value="Slice of Life">Slice of Life / Drama</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Theme</label>
+                        <input id="themeInput" type="text" placeholder="e.g., Betrayal, Ancient Artifacts" class="w-full bg-white/70 border border-slate-200 rounded-xl px-3 py-2 text-slate-700 focus:outline-none focus:ring-2 focus:ring-purple-400" />
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Characters (Comma separated)</label>
+                        <input id="charactersInput" type="text" placeholder="e.g., Jax, Lyra" class="w-full bg-white/70 border border-slate-200 rounded-xl px-3 py-2 text-slate-700 focus:outline-none focus:ring-2 focus:ring-purple-400" />
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Target Word Count</label>
+                        <input id="wordCountInput" type="number" value="400" min="100" max="2500" class="w-full bg-white/70 border border-slate-200 rounded-xl px-3 py-2 text-slate-700 focus:outline-none focus:ring-2 focus:ring-purple-400" />
+                    </div>
+
+                    <button onclick="generateStory()" class="w-full mt-2 bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white font-bold py-2.5 rounded-xl transition duration-150 shadow-md shadow-indigo-200">
+                        Weave Narrative
+                    </button>
+                </div>
+            </section>
+
+            <section class="md:col-span-2 glass-panel p-8 rounded-2xl min-h-[400px] flex flex-col relative">
+                <div id="definitionWidget" class="hidden absolute top-24 right-6 w-64 bg-white/95 backdrop-blur border border-purple-200 p-4 rounded-xl shadow-xl z-20 transition-all duration-200">
+                    <div class="flex justify-between items-center border-b border-slate-100 pb-1.5 mb-2">
+                        <span class="text-[10px] font-bold text-purple-500 uppercase tracking-widest">Word Meaning</span>
+                        <button onclick="closeDefinitionWidget()" class="text-slate-400 hover:text-slate-600 font-bold text-base line-height-none">&times;</button>
+                    </div>
+                    <div id="definitionContent" class="text-xs text-slate-600"></div>
+                </div>
+
+                <div id="outputPlaceholder" class="m-auto text-center max-w-sm text-slate-400">
+                    <span class="text-4xl block mb-2">📖</span>
+                    Your generated short story masterpiece will paint itself canvas-side across this pane.
+                </div>
+
+                <div id="loadingSpinner" class="hidden m-auto text-center">
+                    <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-indigo-600 mx-auto mb-3"></div>
+                    <p class="text-sm font-semibold text-indigo-600 animate-pulse">Consulting the digital muse...</p>
+                </div>
+
+                <div id="characterDoodleBar" class="hidden flex flex-wrap justify-between items-center gap-4 mb-6 border-b border-slate-100 pb-5">
+                    <div id="characterAvatarsContainer" class="flex flex-wrap items-center gap-4 text-center"></div>
+                    <button id="ttsButton" onclick="toggleSpeech()" class="flex items-center gap-2 bg-white/80 hover:bg-white border border-slate-200 text-slate-700 font-bold px-4 py-2 rounded-xl transition duration-150 shadow-sm text-sm">
+                        <span id="ttsIcon">🔊</span> <span id="ttsText">Read Aloud</span>
+                    </button>
+                </div>
+
+                <article id="storyContent" class="prose prose-slate max-w-none hidden text-slate-700 leading-relaxed space-y-4"></article>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        // Mapping of SVG vector doodles dynamically injected dependent on current selected genres 
+        const doodleAssets = {
+            "Sci-Fi": `
+                <svg class="doodle w-16 h-16 top-10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0-9 9h18a9 9 0 0 0-9-9z"/></svg>
+                <svg class="doodle w-12 h-12 top-48 left-6" style="animation-delay: 1.5s" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+            `,
+            "Fantasy": `
+                <svg class="doodle w-16 h-16 top-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                <svg class="doodle w-14 h-14 top-52 left-4" style="animation-delay: 2s" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z"/><path d="M12 7v10M7 12h10"/></svg>
+            `,
+            "Mystery": `
+                <svg class="doodle w-16 h-16 top-12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+                <svg class="doodle w-12 h-12 top-44 left-8" style="animation-delay: 1s" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            `,
+            "Horror": `
+                <svg class="doodle w-16 h-16 top-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                <svg class="doodle w-12 h-12 top-48 left-10" style="animation-delay: 2.5s" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16v16H4z"/></svg>
+            `
+        };
+
+        let currentUtterance = null;
+        let globalWordsArray = [];
+
+        function updateDoodles() {
+            const currentGenre = document.getElementById("genreInput").value;
+            const leftZone = document.getElementById("leftDoodleZone");
+            const rightZone = document.getElementById("rightDoodleZone");
+            
+            const colors = {
+                "Sci-Fi": "text-indigo-500", "Fantasy": "text-amber-500", "Mystery": "text-emerald-500", "Horror": "text-rose-600",
+                "Cyberpunk": "text-fuchsia-500", "Steampunk": "text-yellow-700", "Historical Fiction": "text-stone-600",
+                "Romance": "text-pink-500", "Thriller": "text-red-700", "Adventure": "text-emerald-600", "Mythology": "text-cyan-600",
+                "Dystopian": "text-orange-800", "Comedy": "text-teal-500", "Western": "text-amber-800", "Slice of Life": "text-sky-500"
+            };
+            
+            let legacyGenreKey = "Sci-Fi";
+            if(["Fantasy", "Mythology", "Adventure"].includes(currentGenre)) legacyGenreKey = "Fantasy";
+            if(["Mystery", "Thriller", "Cyberpunk", "Steampunk", "Historical Fiction", "Western"].includes(currentGenre)) legacyGenreKey = "Mystery";
+            if(["Horror", "Dystopian"].includes(currentGenre)) legacyGenreKey = "Horror";
+
+            if(doodleAssets[legacyGenreKey]) {
+                leftZone.innerHTML = doodleAssets[legacyGenreKey];
+                rightZone.innerHTML = doodleAssets[legacyGenreKey];
+                
+                leftZone.className = `hidden lg:block fixed left-10 top-1/4 w-32 h-96 pointer-events-none ${colors[currentGenre] || "text-indigo-400"}`;
+                rightZone.className = `hidden lg:block fixed right-12 top-1/3 w-32 h-96 pointer-events-none ${colors[currentGenre] || "text-indigo-400"}`;
+            }
+        }
+
+        document.getElementById("genreInput").addEventListener("change", updateDoodles);
+        updateDoodles();
+
+        // Wrap every single text word in a token span element for precise tracking and click actions
+        function preparationWordTokens() {
+            const storyPane = document.getElementById("storyContent");
+            globalWordsArray = [];
+            
+            const walker = document.createTreeWalker(storyPane, NodeFilter.SHOW_TEXT, null, false);
+            let textNodes = [];
+            while(walker.nextNode()) textNodes.push(walker.currentNode);
+
+            textNodes.forEach(node => {
+                const parent = node.parentNode;
+                if (parent.classList.contains('story-word') || !node.nodeValue.trim()) return;
+
+                const words = node.nodeValue.split(/(\s+)/);
+                const fragment = document.createDocumentFragment();
+
+                words.forEach(word => {
+                    if (word.trim() && /[a-zA-Z0-9]/.test(word)) {
+                        const span = document.createElement('span');
+                        span.className = 'story-word';
+                        span.textContent = word;
+                        
+                        // Click Event: Fetch Meaning of Selected Word
+                        span.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            getWordDefinition(word, span);
+                        });
+
+                        fragment.appendChild(span);
+                        globalWordsArray.push(span);
+                    } else {
+                        fragment.appendChild(document.createTextNode(word));
+                    }
+                });
+                parent.replaceChild(fragment, node);
+            });
+        }
+
+        // Fetch definition from open dictionary API and show it inside the window option element
+        async function getWordDefinition(word, element) {
+            const cleanWord = word.replace(/[^a-zA-Z0-9]/g, "");
+            if (!cleanWord) return;
+
+            element.classList.add('bg-purple-200');
+            
+            const widget = document.getElementById("definitionWidget");
+            const content = document.getElementById("definitionContent");
+
+            try {
+                const res = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${cleanWord}`);
+                if (!res.ok) throw new Error();
+                const json = await res.json();
+                
+                const definition = json[0].meanings[0].definitions[0].definition;
+                const partOfSpeech = json[0].meanings[0].partOfSpeech;
+                
+                content.innerHTML = `
+                    <p class="font-extrabold text-indigo-700 text-sm mb-0.5">"${cleanWord}"</p>
+                    <p class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-2">${partOfSpeech}</p>
+                    <p class="leading-relaxed text-slate-600 font-medium">${definition}</p>
+                `;
+                widget.classList.remove("hidden");
+            } catch (err) {
+                content.innerHTML = `
+                    <p class="font-bold text-slate-700">"${cleanWord}"</p>
+                    <p class="text-[11px] text-rose-500 font-medium mt-1">Definition unavailable for this context token.</p>
+                `;
+                widget.classList.remove("hidden");
+            } finally {
+                element.classList.remove('bg-purple-200');
+            }
+        }
+
+        function closeDefinitionWidget() {
+            document.getElementById("definitionWidget").classList.add("hidden");
+        }
+
+        // Control Voice Speech Synthesis Engine with word highlight index boundaries
+        function toggleSpeech() {
+            const ttsButton = document.getElementById("ttsButton");
+            const ttsIcon = document.getElementById("ttsIcon");
+            const ttsText = document.getElementById("ttsText");
+
+            if (window.speechSynthesis.speaking) {
+                window.speechSynthesis.cancel();
+                resetTtsButton();
+                clearAllWordHighlights();
+                return;
+            }
+
+            const storyPane = document.getElementById("storyContent");
+            const clearText = storyPane.innerText || storyPane.textContent;
+
+            if (!clearText || clearText.trim().length === 0) return;
+
+            currentUtterance = new SpeechSynthesisUtterance(clearText);
+            
+            let wordIndex = 0;
+            currentUtterance.onboundary = (event) => {
+                if (event.name === 'word') {
+                    clearAllWordHighlights();
+                    if (globalWordsArray[wordIndex]) {
+                        globalWordsArray[wordIndex].classList.add('word-highlight');
+                        globalWordsArray[wordIndex].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                        wordIndex++;
+                    }
+                }
+            };
+
+            currentUtterance.onend = () => {
+                resetTtsButton();
+                clearAllWordHighlights();
+            };
+
+            currentUtterance.onerror = () => {
+                resetTtsButton();
+                clearAllWordHighlights();
+            };
+
+            ttsIcon.innerText = "⏱️";
+            ttsText.innerText = "Stop Reading";
+            ttsButton.classList.remove("text-slate-700", "border-slate-200");
+            ttsButton.classList.add("text-rose-600", "border-rose-200", "bg-rose-50");
+
+            window.speechSynthesis.speak(currentUtterance);
+        }
+
+        function deleteDefinitionWindow() {
+            document.getElementById("definitionWidget").classList.add("hidden");
+        }
+
+        function clearAllWordHighlights() {
+            globalWordsArray.forEach(span => span.classList.remove('word-highlight'));
+        }
+
+        function resetTtsButton() {
+            const ttsButton = document.getElementById("ttsButton");
+            const ttsIcon = document.getElementById("ttsIcon");
+            const ttsText = document.getElementById("ttsText");
+            
+            ttsIcon.innerText = "🔊";
+            ttsText.innerText = "Read Aloud";
+            ttsButton.className = "flex items-center gap-2 bg-white/80 hover:bg-white border border-slate-200 text-slate-700 font-bold px-4 py-2 rounded-xl transition duration-150 shadow-sm text-sm";
+        }
+
+        async function generateStory() {
+            const theme = document.getElementById("themeInput").value.trim();
+            const genre = document.getElementById("genreInput").value;
+            const charsRaw = document.getElementById("charactersInput").value;
+            const wordCount = parseInt(document.getElementById("wordCountInput").value) || 400;
+
+            if(!theme || !charsRaw) {
+                alert("Please fill out both Theme and Characters!");
+                return;
+            }
+
+            if (window.speechSynthesis.speaking) {
+                window.speechSynthesis.cancel();
+                resetTtsButton();
+            }
+
+            closeDefinitionWidget();
+
+            const characters = charsRaw.split(",").map(c => c.trim()).filter(c => c.length > 0);
+
+            document.getElementById("outputPlaceholder").classList.add("hidden");
+            document.getElementById("storyContent").classList.add("hidden");
+            document.getElementById("characterDoodleBar").classList.add("hidden");
+            document.getElementById("loadingSpinner").classList.remove("hidden");
+
+            try {
+                const response = await fetch('/api/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ theme, genre, characters, word_count: wordCount })
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    const avatarsContainer = document.getElementById("characterAvatarsContainer");
+                    avatarsContainer.innerHTML = ""; 
+                    
+                    characters.forEach(char => {
+                        const avatarUrl = `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(char)}`;
+                        
+                        const charElement = document.createElement("div");
+                        charElement.className = "flex flex-col items-center gap-1 bg-slate-50/80 border border-slate-100 rounded-xl p-2 min-w-[70px] shadow-sm";
+                        charElement.innerHTML = `
+                            <img src="${avatarUrl}" alt="${char}" class="w-12 h-12 rounded-full border border-purple-200 bg-white shadow-inner" />
+                            <span class="text-xs font-bold text-slate-600 max-w-[80px] truncate">${char}</span>
+                        `;
+                        avatarsContainer.appendChild(charElement);
+                    });
+
+                    document.getElementById("storyContent").innerHTML = marked.parse(data.story);
+                    preparationWordTokens();
+
+                    document.getElementById("loadingSpinner").classList.add("hidden");
+                    document.getElementById("characterDoodleBar").classList.remove("hidden");
+                    document.getElementById("storyContent").classList.remove("hidden");
+                    resetTtsButton();
+                } else {
+                    alert("Generation failed: " + data.detail);
+                    document.getElementById("loadingSpinner").classList.add("hidden");
+                    document.getElementById("outputPlaceholder").classList.remove("hidden");
+                }
+            } catch (err) {
+                alert("Error calling api endpoint: " + err.toString());
+                document.getElementById("loadingSpinner").classList.add("hidden");
+                document.getElementById("outputPlaceholder").classList.remove("hidden");
+            }
+        }
+    </script>
+</body>
+</html>
